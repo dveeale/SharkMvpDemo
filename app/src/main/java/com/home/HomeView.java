@@ -2,18 +2,24 @@ package com.home;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.SplashScreen.SplashContarct;
 import com.example.dveeale.sharkmvpdemo.R;
 import com.home.find.FindFragment;
 import com.home.more.MoreFragment;
 import com.home.news.NewsFragment;
+import com.home.setting.SettingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,19 +30,35 @@ import java.util.List;
 
 public class HomeView implements HomeContarct.View{
 
-    private FragmentActivity mActivity;
+    private AppCompatActivity mActivity;
 
-    private Button mNewsButton;
-    private Button mFindButton;
-    private Button mMoreButton;
+    private FragmentManager fragmentManager;
 
-    private ViewPager mViewPager;
-    private HomeFragmentPagerAdapter mHomeFragmentPagerAdapter;
+    /*--控件定义--*/
+    private ImageView tab_img1;
+    private TextView tab_text1;
 
-    private List<Class<?>> mList;
-    private List<Bundle> mBundleList;
+    private ImageView tab_img2;
+    private TextView tab_text2;
 
-    public HomeView(FragmentActivity mActivity){
+    private ImageView tab_img3;
+    private TextView tab_text3;
+
+    private ImageView tab_img4;
+    private TextView tab_text4;
+
+    private NewsFragment mNewsFragment;
+    private FindFragment mFindFragment;
+    private MoreFragment mMoreFragment;
+    private SettingFragment mSettingFragment;
+
+    /*--数据变量定义--*/
+    private static String[] FRAGMENT_TAGS = new String[]{"1", "2", "3", "4"};
+    private View[] tabs = new View[4];
+    private int current = 1;
+    private int currentTab = -1;
+
+    public HomeView(AppCompatActivity mActivity){
         this.mActivity=mActivity;
     }
 
@@ -52,112 +74,161 @@ public class HomeView implements HomeContarct.View{
     }
 
     private void findViews(){
-        mNewsButton=(Button)mActivity.findViewById(R.id.HomeButton);
-        mFindButton=(Button)mActivity.findViewById(R.id.FindButton);
-        mMoreButton=(Button)mActivity.findViewById(R.id.MoreButton);
-        mViewPager=(ViewPager)mActivity.findViewById(R.id.viewPager);
+        tabs[0] = mActivity.findViewById(R.id.tab_one);
+        tab_img1 = (ImageView) mActivity.findViewById(R.id.tab_img1);
+        tab_text1 = (TextView) mActivity.findViewById(R.id.tab_text1);
+
+        tabs[1] = mActivity.findViewById(R.id.tab_two);
+        tab_img2 = (ImageView) mActivity.findViewById(R.id.tab_img2);
+        tab_text2 = (TextView) mActivity.findViewById(R.id.tab_text2);
+
+        tabs[2] = mActivity.findViewById(R.id.tab_three);
+        tab_img3 = (ImageView) mActivity.findViewById(R.id.tab_img3);
+        tab_text3 = (TextView) mActivity.findViewById(R.id.tab_text3);
+
+        tabs[3] = mActivity.findViewById(R.id.tab_four);
+        tab_img4 = (ImageView) mActivity.findViewById(R.id.tab_img4);
+        tab_text4 = (TextView) mActivity.findViewById(R.id.tab_text4);
+
+
     }
 
     private void init(){
-        mViewPager.setOnPageChangeListener(pageChangeListener);
-        mNewsButton.setOnClickListener(clickListener);
-        mFindButton.setOnClickListener(clickListener);
-        mMoreButton.setOnClickListener(clickListener);
+        for (int i = 0; i < tabs.length; i++) {
+            final int j = i;
+            tabs[i].setTag(i);
+            tabs[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    selectTab(j);
+                }
+            });
+        }
+        fragmentManager = mActivity.getSupportFragmentManager();
+        selectTab(current);
         initData();
 
     }
 
     private void initData() {
-        mList = new ArrayList<Class<?>>();
-        mBundleList = new ArrayList<Bundle>();
-        mList.add(NewsFragment.class);
-        mBundleList.add(null);
-        mList.add(FindFragment.class);
-        mBundleList.add(null);
 
-        mList.add(MoreFragment.class);
-        mBundleList.add(null);
 
-        mHomeFragmentPagerAdapter = new HomeFragmentPagerAdapter(mActivity.getSupportFragmentManager(), mActivity,
-                mList,mBundleList);
-        mViewPager.setAdapter(mHomeFragmentPagerAdapter);
-        mNewsButton.setSelected(true);
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.HomeButton:
-                    mViewPager.setCurrentItem(0);
-                    break;
-                case R.id.FindButton:
-                    mViewPager.setCurrentItem(1);
-                    break;
-                case R.id.MoreButton:
-                    mViewPager.setCurrentItem(2);
-                    break;
-            }
-        }
-    };
-
-    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
-
-        /**
-         * 滑动停止时调用
-         *
-         * @param position
-         *            当前页面位置
-         */
-        @Override
-        public void onPageSelected(int position) {
-            setSelectedPosition(position);
-        }
-
-        /**
-         * 页面开始滑动到停止之前一直得到调用
-         *
-         * @param arg0
-         *            当前可见第一个页面的position
-         * @param arg1
-         *            当前页面偏移百分比
-         * @param arg2
-         *            当前页面偏移像素位置
-         */
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-        }
-
-        /**
-         * 滑动状态改变时被调用
-         *
-         * @param atate
-         *            有3个值，0：滑动结束 1：手指按下 2：手指抬起
-         */
-        @Override
-        public void onPageScrollStateChanged(int atate) {
-        }
-    };
-
-    private void setSelectedPosition(int position) {
-        switch (position) {
+    private void selectTab(int tab) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch (tab) {
             case 0:
-                mNewsButton.setSelected(true);
-                mFindButton.setSelected(false);
-                mMoreButton.setSelected(false);
+                if (currentTab != 0) {
+                    clearTabSelection();
+                    hideFragement(fragmentTransaction);
+                    tab_text1.setTextColor(Color.parseColor("#78e0ff"));
+                    tab_img1.setImageResource(R.drawable.simle_logo_00);
+                    tab_img2.setImageResource(R.drawable.simle_logo_02);
+                    tab_img3.setImageResource(R.drawable.simle_logo_03);
+                    tab_img4.setImageResource(R.drawable.simle_logo_04);
+                    if (mNewsFragment == null) {
+                        mNewsFragment = new NewsFragment();
+                        fragmentTransaction.add(R.id.container, mNewsFragment, FRAGMENT_TAGS[0]);
+                    } else {
+                        fragmentTransaction.show(mNewsFragment);
+                    }
+                    current = 0;
+                    currentTab = 0;
+                }
                 break;
             case 1:
-                mNewsButton.setSelected(false);
-                mFindButton.setSelected(true);
-                mMoreButton.setSelected(false);
+                if (currentTab != 1) {
+                    clearTabSelection();
+                    hideFragement(fragmentTransaction);
+                    tab_text2.setTextColor(Color.parseColor("#78e0ff"));
+                    tab_img1.setImageResource(R.drawable.simle_logo_01);
+                    tab_img2.setImageResource(R.drawable.simle_logo_00);
+                    tab_img3.setImageResource(R.drawable.simle_logo_03);
+                    tab_img4.setImageResource(R.drawable.simle_logo_04);
+                    if (mFindFragment == null) {
+                        mFindFragment = new FindFragment();
+                        fragmentTransaction.add(R.id.container, mFindFragment, FRAGMENT_TAGS[1]);
+                    } else {
+                        fragmentTransaction.show(mFindFragment);
+                    }
+                    current = 1;
+                    currentTab = 1;
+                }
                 break;
             case 2:
-                mNewsButton.setSelected(false);
-                mFindButton.setSelected(false);
-                mMoreButton.setSelected(true);
+                if (currentTab != 2) {
+                    clearTabSelection();
+                    hideFragement(fragmentTransaction);
+                    tab_text3.setTextColor(Color.parseColor("#78e0ff"));
+                    tab_img1.setImageResource(R.drawable.simle_logo_01);
+                    tab_img2.setImageResource(R.drawable.simle_logo_02);
+                    tab_img3.setImageResource(R.drawable.simle_logo_00);
+                    tab_img4.setImageResource(R.drawable.simle_logo_04);
+                    if (mMoreFragment == null) {
+                        mMoreFragment = new MoreFragment();
+                        fragmentTransaction.add(R.id.container, mMoreFragment, FRAGMENT_TAGS[2]);
+                    } else {
+                        fragmentTransaction.show(mMoreFragment);
+                    }
+                    current = 2;
+                    currentTab = 2;
+                }
+                break;
+            case 3:
+                if (currentTab != 3) {
+                    clearTabSelection();
+                    hideFragement(fragmentTransaction);
+                    tab_text4.setTextColor(Color.parseColor("#78e0ff"));
+                    tab_img1.setImageResource(R.drawable.simle_logo_01);
+                    tab_img2.setImageResource(R.drawable.simle_logo_02);
+                    tab_img3.setImageResource(R.drawable.simle_logo_03);
+                    tab_img4.setImageResource(R.drawable.simle_logo_00);
+                    if (mSettingFragment == null) {
+                        mSettingFragment = new SettingFragment();
+                        fragmentTransaction.add(R.id.container, mSettingFragment, FRAGMENT_TAGS[3]);
+                    } else {
+                        fragmentTransaction.show(mSettingFragment);
+                    }
+                    current = 3;
+                    currentTab = 3;
+                }
                 break;
         }
+        fragmentTransaction.commit();
     }
+
+
+    /**
+     * 设置为默认颜色
+     */
+    private void clearTabSelection() {
+        tab_text1.setTextColor(Color.RED);
+        tab_text2.setTextColor(Color.RED);
+        tab_text3.setTextColor(Color.RED);
+        tab_text4.setTextColor(Color.RED);
+    }
+
+    /**
+     * 默认隐藏所有的fragment
+     *
+     * @param fragmentTransaction
+     */
+
+    private void hideFragement(FragmentTransaction fragmentTransaction) {
+        if (mNewsFragment != null) {
+            fragmentTransaction.hide(mNewsFragment);
+        }
+        if (mFindFragment != null) {
+            fragmentTransaction.hide(mFindFragment);
+        }
+        if (mMoreFragment != null) {
+            fragmentTransaction.hide(mMoreFragment);
+        }
+        if (mSettingFragment != null) {
+            fragmentTransaction.hide(mSettingFragment);
+        }
+    }
+
 
 }
