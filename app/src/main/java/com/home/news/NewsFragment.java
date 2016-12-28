@@ -1,6 +1,7 @@
 package com.home.news;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import com.example.dveeale.sharkmvpdemo.R;
  */
 public class NewsFragment extends Fragment {
 
+    private NewsView mNewsView;
+    private NewsPresonter mNewsPresonter;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -23,11 +26,17 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
         View view=inflater.inflate(R.layout.fragment_news, container, false);
+        mNewsView.setPresenter(mNewsPresonter);
+        mNewsView.initViews(view);
 
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mNewsView=new NewsView(context);
+        mNewsPresonter=new NewsPresonter(context,mNewsView);
+    }
 }

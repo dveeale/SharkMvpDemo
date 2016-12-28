@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.SplashScreen.SplashContarct;
+import com.SplashScreen.SplashPresenter;
 import com.example.dveeale.sharkmvpdemo.R;
 import com.home.find.FindFragment;
 import com.home.more.MoreFragment;
@@ -33,6 +34,8 @@ public class HomeView implements HomeContarct.View{
     private AppCompatActivity mActivity;
 
     private FragmentManager fragmentManager;
+
+    private HomePresonter mHomePresonter;
 
     /*--控件定义--*/
     private ImageView tab_img1;
@@ -63,15 +66,17 @@ public class HomeView implements HomeContarct.View{
     }
 
     @Override
+    public void setPresenter(HomePresonter mHomePresonter) {
+        this.mHomePresonter=mHomePresonter;
+    }
+
+    @Override
     public void initViews() {
         findViews();
         init();
     }
 
-    @Override
-    public void setPresenter(SplashContarct.Presenter presenter) {
 
-    }
 
     private void findViews(){
         tabs[0] = mActivity.findViewById(R.id.tab_one);

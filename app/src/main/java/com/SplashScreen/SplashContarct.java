@@ -8,13 +8,7 @@ import com.base.BaseView;
  */
 
 public interface SplashContarct {
-    interface View extends BaseView<Presenter> {
-        void findViews();
-        void initViews();
-        void initViewsData();
-
-        void showTips();
-
+    interface View extends BaseView<SplashPresenter> {
         void JumpToHome();
     }
 

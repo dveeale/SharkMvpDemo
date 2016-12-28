@@ -20,7 +20,7 @@ public class HomeActivity extends BaseActivity {
 
         mHomeView=new HomeView(this);
         mHomePersonter=new HomePresonter(mHomeView);
-
+        mHomeView.setPresenter(mHomePersonter);
 
         /*--设置标题头--*/
         title = getString(R.string.app_name);

@@ -1,6 +1,7 @@
 package com.home;
 
 import com.SplashScreen.SplashContarct;
+import com.SplashScreen.SplashPresenter;
 import com.base.BasePresenter;
 import com.base.BaseView;
 
@@ -9,7 +10,7 @@ import com.base.BaseView;
  */
 
 public interface HomeContarct {
-    interface View extends BaseView<SplashContarct.Presenter> {
+    interface View extends BaseView<HomePresonter> {
         void initViews();
     }
 

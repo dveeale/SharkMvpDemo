@@ -17,25 +17,6 @@ public class SplashView implements SplashContarct.View{
         this.mContext=mContext;
     }
 
-    @Override
-    public void findViews() {
-
-    }
-
-    @Override
-    public void initViews() {
-
-    }
-
-    @Override
-    public void initViewsData() {
-
-    }
-
-    @Override
-    public void showTips() {
-
-    }
 
     @Override
     public void JumpToHome() {
@@ -43,8 +24,9 @@ public class SplashView implements SplashContarct.View{
 
     }
 
+
     @Override
-    public void setPresenter(SplashContarct.Presenter presenter) {
+    public void setPresenter(SplashPresenter presenter) {
 
     }
 }
