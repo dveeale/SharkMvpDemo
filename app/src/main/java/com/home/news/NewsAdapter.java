@@ -32,9 +32,8 @@ public class NewsAdapter extends BaseRecyclerAdapter<NewsAdapter.MainViewHolder>
     private Context context;
     private List<MainItemBean> mainItemBeanList;
 
-    public NewsAdapter(Context context, List<MainItemBean> mainItemBeanList) {
+    public NewsAdapter(Context context) {
         this.context = context;
-        this.mainItemBeanList = mainItemBeanList;
     }
 
     public void SetDataList(List<MainItemBean> mainItemBeanList){
@@ -79,7 +78,11 @@ public class NewsAdapter extends BaseRecyclerAdapter<NewsAdapter.MainViewHolder>
 
     @Override
     public int getAdapterItemCount() {
-        return mainItemBeanList.size();
+        int size=0;
+        if(mainItemBeanList!=null&&mainItemBeanList.size()>0){
+            size=mainItemBeanList.size();
+        }
+        return size;
     }
 
     class MainViewHolder extends RecyclerView.ViewHolder {

@@ -32,7 +32,6 @@ public class NewsView implements NewsContarct.CView {
 
     private RecyclerView rvMain;
     private XRefreshView refreshMain;
-    private List<MainItemBean> mainItemBeanList = new ArrayList<>();
     private NewsAdapter mNewsAdapter;
 
     private FloatingActionButton fabMainToTop;
@@ -41,6 +40,44 @@ public class NewsView implements NewsContarct.CView {
 
     public NewsView(Context mContext){
         this.mContext=mContext;
+    }
+
+    private void init(){
+        toolbar_one.setTitle(mContext.getString(R.string.app_name));
+        toolbar_one.setLogo(R.drawable.simle_logo_01);
+
+        rvMain.setLayoutManager(new GridLayoutManager(mContext, GridLayoutManager.VERTICAL, 1, false));
+
+        mNewsAdapter = new NewsAdapter(mContext);
+        mNewsAdapter.setCustomLoadMoreView(new XRefreshViewFooter(mContext));
+        rvMain.setAdapter(mNewsAdapter);
+
+        mNewsPresonter.LoadNetData("");
+
+        refreshMain.setPullLoadEnable(true);
+        refreshMain.setAutoLoadMore(true);
+        refreshMain.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mNewsPresonter.LoadNetData("");
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onLoadMore(boolean isSilence) {
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mNewsPresonter.LoadNetMoreData("");
+                    }
+                }, 1000);
+            }
+        });
     }
 
     @Override
@@ -57,7 +94,7 @@ public class NewsView implements NewsContarct.CView {
 
     @Override
     public void UpdatePage(List<MainItemBean> mainItemBeanList) {
-        this.mainItemBeanList=mainItemBeanList;
+
         mNewsAdapter.SetDataList(mainItemBeanList);
 
         mNewsAdapter.notifyDataSetChanged();
@@ -66,6 +103,16 @@ public class NewsView implements NewsContarct.CView {
     @Override
     public void ShowToast(String info) {
         Toast.makeText(mContext, info, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void StopListRefresh() {
+        refreshMain.stopRefresh();
+    }
+
+    @Override
+    public void StopListLoadMore() {
+        refreshMain.stopLoadMore();
     }
 
     private void findViews(View mView){
@@ -77,19 +124,5 @@ public class NewsView implements NewsContarct.CView {
         fabMainToTop = (FloatingActionButton) mView.findViewById(R.id.fabMainToTop);
     }
 
-    private void init(){
-        toolbar_one.setTitle(mContext.getString(R.string.app_name));
-        toolbar_one.setLogo(R.drawable.simle_logo_01);
 
-        refreshMain.setPullLoadEnable(true);
-        refreshMain.setAutoLoadMore(true);
-
-        rvMain.setLayoutManager(new GridLayoutManager(mContext, GridLayoutManager.VERTICAL, 1, false));
-
-        mNewsAdapter = new NewsAdapter(mContext, mainItemBeanList);
-        mNewsAdapter.setCustomLoadMoreView(new XRefreshViewFooter(mContext));
-        rvMain.setAdapter(mNewsAdapter);
-
-        mNewsPresonter.LoadNetData("");
-    }
 }

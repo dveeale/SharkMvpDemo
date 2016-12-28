@@ -17,6 +17,8 @@ public interface NewsContarct {
         void initViews(View mView);
         void UpdatePage(List<MainItemBean> mainItemBeanList);
         void ShowToast(String info);
+        void StopListRefresh();
+        void StopListLoadMore();
     }
 
     interface Presenter extends BasePresenter {

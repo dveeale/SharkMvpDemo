@@ -50,6 +50,9 @@ public class NewsPresonter implements  NewsContarct.Presenter{
     @Override
     public void LoadNetData(String info) {
         {
+            mNewsView.StopListRefresh();
+            page=1;
+            rqcnt += 2;
             r += new Random().nextInt(1000000);
             new AsyncTask<String, String, String>() {
                 @Override
@@ -67,6 +70,7 @@ public class NewsPresonter implements  NewsContarct.Presenter{
                             if (jsonObject != null) {
                                 JSONArray items = jsonObject.optJSONArray("items");
                                 if (items != null) {
+                                    mainItemBeanList.clear();
                                     int itemLength = items.length();
                                     for (int i = 0; i < itemLength; i++) {
                                         MainItemBean mainItemBean = new MainItemBean(items.optJSONObject(i));
@@ -100,7 +104,60 @@ public class NewsPresonter implements  NewsContarct.Presenter{
 
     @Override
     public void LoadNetMoreData(String info) {
+        {
+            page++;
+            r += new Random().nextInt(1000000);
+            rqcnt += 2;
+            new AsyncTask<String, String, String>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                }
 
+                @Override
+                protected void onPostExecute(String s) {
+                    super.onPostExecute(s);
+                    try {
+                        mNewsView.StopListLoadMore();
+                        if (!StringUtil.isNullOrEmpty(s)) {
+                            articles = "11793" + new Random().nextInt(10) + new Random().nextInt(10) + new Random().nextInt(10) + new Random().nextInt(10) + ",";
+                            JSONObject jsonObject = new JSONObject(s);
+                            if (jsonObject != null) {
+                                JSONArray items = jsonObject.optJSONArray("items");
+                                if (items != null) {
+                                    int itemLength = items.length();
+                                    for (int i = 0; i < itemLength; i++) {
+                                        MainItemBean mainItemBean = new MainItemBean(items.optJSONObject(i));
+                                        mainItemBeanList.add(mainItemBean);
+                                        int t = new Random().nextInt(30);
+                                        if (t == 0) {
+                                            t += 1;
+                                        }
+                                        if (i < t) {
+                                            articles += mainItemBean.getId();
+                                            if (i != t - 1) {
+                                                articles += ",";
+                                            }
+                                        }
+                                    }
+
+                                    mNewsView.UpdatePage(mainItemBeanList);
+                                }
+                            }
+                            return;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    mNewsView.ShowToast("数据加载失败");
+                }
+
+                @Override
+                protected String doInBackground(String... params) {
+                    return NetUtil.httpGetUtil(mContext, Urls.ARTICLE_LIST_LOAD_MORE + "page=" + page + "&readarticles=[" + articles + "]&rqcnt=" + rqcnt + "&r=519baad91478749" + r);
+                }
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     @Override
