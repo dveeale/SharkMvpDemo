@@ -55,7 +55,9 @@ public class NewsView implements NewsContarct.CView {
         mNewsAdapter.setCustomLoadMoreView(new XRefreshViewFooter(mContext));
         rvMain.setAdapter(mNewsAdapter);
 
-        mNewsPresonter.LoadNetData("");
+        mNewsPresonter.LoadLocalData("");
+
+//        mNewsPresonter.LoadNetData("");
 
         refreshMain.setPullLoadEnable(true);
         refreshMain.setAutoLoadMore(true);

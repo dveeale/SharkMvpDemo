@@ -1,8 +1,11 @@
 package com.home.news;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.db.HawkDbKey;
 import com.listener.NetWorkCallBackListener;
+import com.orhanobut.hawk.Hawk;
 import com.retrofit.news.NewsApi;
 import com.retrofit.news.NewsResult;
 import com.retrofit.news.NewsService;
@@ -15,7 +18,7 @@ import retrofit2.Response;
  * Created by dveeale on 16/12/28.
  */
 
-public class NewsModelImpl {
+public class NewsModelImpl implements HawkDbKey{
 
     private Context mContext;
 
@@ -49,6 +52,7 @@ public class NewsModelImpl {
                 if(response.isSuccessful()){
                     NewsResult result=response.body();
                     mListener.onSuccess(result,false);
+                    Hawk.put(NEWS_LOCAL_DATA_KEY,result);
                 }
             }
 
@@ -81,5 +85,13 @@ public class NewsModelImpl {
                 mListener.onFailure(call.toString());
             }
         });
+    }
+
+    public void LoadLocalData(){
+        if(Hawk.contains(NEWS_LOCAL_DATA_KEY)){
+            mListener.onSuccess((NewsResult) Hawk.get(NEWS_LOCAL_DATA_KEY),false);
+        }else{
+            mListener.onLoadNetData();
+        }
     }
 }

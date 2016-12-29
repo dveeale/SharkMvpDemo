@@ -8,4 +8,5 @@ public interface NetWorkCallBackListener<T> {
 
     void onSuccess(T result,boolean isMore);
     void onFailure(String json);
+    void onLoadNetData();
 }

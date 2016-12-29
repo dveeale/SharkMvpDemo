@@ -4,6 +4,8 @@ import android.app.Application;
 import android.util.DisplayMetrics;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.orhanobut.hawk.Hawk;
+import com.orhanobut.hawk.LogLevel;
 import com.util.DisplayUtil;
 
 
@@ -18,6 +20,9 @@ public class AppConfig extends Application {
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(getApplicationContext(), FrescoConfig.getsImagePipelineConfig(this));
+
+        Hawk.init(this);
+
 //        LitePal.initialize(getApplicationContext());
         initDisplayOpinion();
     }

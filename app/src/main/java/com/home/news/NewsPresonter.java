@@ -42,7 +42,7 @@ public class NewsPresonter implements  NewsContarct.Presenter,NetWorkCallBackLis
 
     @Override
     public void LoadLocalData(String info) {
-
+        mNewsModelImpl.LoadLocalData();
     }
 
 
@@ -54,5 +54,10 @@ public class NewsPresonter implements  NewsContarct.Presenter,NetWorkCallBackLis
     @Override
     public void onFailure(String json) {
         mNewsView.ShowToast(json);
+    }
+
+    @Override
+    public void onLoadNetData() {
+        mNewsModelImpl.LoadNetData("toutiao","","baisi");
     }
 }
