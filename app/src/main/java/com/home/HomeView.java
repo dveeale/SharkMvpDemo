@@ -18,6 +18,7 @@ import com.SplashScreen.SplashContarct;
 import com.SplashScreen.SplashPresenter;
 import com.example.dveeale.sharkmvpdemo.R;
 import com.home.find.FindFragment;
+import com.home.joke.JokeFragment;
 import com.home.more.MoreFragment;
 import com.home.news.NewsFragment;
 import com.home.setting.SettingFragment;
@@ -55,10 +56,12 @@ public class HomeView implements HomeContarct.View{
     private MoreFragment mMoreFragment;
     private SettingFragment mSettingFragment;
 
+    private JokeFragment mJokeFragment;
+
     /*--数据变量定义--*/
     private static String[] FRAGMENT_TAGS = new String[]{"1", "2", "3", "4"};
     private View[] tabs = new View[4];
-    private int current = 1;
+    private int current = 0;
     private int currentTab = -1;
 
     public HomeView(AppCompatActivity mActivity){
@@ -151,11 +154,11 @@ public class HomeView implements HomeContarct.View{
                     tab_img2.setImageResource(R.drawable.simle_logo_00);
                     tab_img3.setImageResource(R.drawable.simle_logo_03);
                     tab_img4.setImageResource(R.drawable.simle_logo_04);
-                    if (mFindFragment == null) {
-                        mFindFragment = new FindFragment();
-                        fragmentTransaction.add(R.id.container, mFindFragment, FRAGMENT_TAGS[1]);
+                    if (mJokeFragment == null) {
+                        mJokeFragment = new JokeFragment();
+                        fragmentTransaction.add(R.id.container, mJokeFragment, FRAGMENT_TAGS[1]);
                     } else {
-                        fragmentTransaction.show(mFindFragment);
+                        fragmentTransaction.show(mJokeFragment);
                     }
                     current = 1;
                     currentTab = 1;
@@ -232,6 +235,9 @@ public class HomeView implements HomeContarct.View{
         }
         if (mSettingFragment != null) {
             fragmentTransaction.hide(mSettingFragment);
+        }
+        if (mJokeFragment != null) {
+            fragmentTransaction.hide(mJokeFragment);
         }
     }
 

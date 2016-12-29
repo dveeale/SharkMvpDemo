@@ -1,4 +1,4 @@
-package com.home.news;
+package com.home.joke;
 
 
 import android.content.Context;
@@ -11,14 +11,14 @@ import android.view.ViewGroup;
 import com.example.dveeale.sharkmvpdemo.R;
 
 /**
- * 新闻数据显示首页
+ * A simple {@link Fragment} subclass.
  */
-public class NewsFragment extends Fragment {
+public class JokeFragment extends Fragment {
 
-    private NewsView mNewsView;
-    private NewsPresonter mNewsPresonter;
+    private JokeView mJokeView;
+    private JokePresonter mJokePresonter;
 
-    public NewsFragment() {
+    public JokeFragment() {
         // Required empty public constructor
     }
 
@@ -26,17 +26,17 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_news, container, false);
-        mNewsView.setPresenter(mNewsPresonter);
-        mNewsView.initViews(view);
 
+        View view=inflater.inflate(R.layout.fragment_joke, container, false);
+        mJokeView.setPresenter(mJokePresonter);
+        mJokeView.initViews(view);
         return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mNewsView=new NewsView(context);
-        mNewsPresonter=new NewsPresonter(context,mNewsView);
+        mJokeView=new JokeView(context);
+        mJokePresonter=new JokePresonter(context,mJokeView);
     }
 }

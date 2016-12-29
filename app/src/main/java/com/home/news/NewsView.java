@@ -14,6 +14,8 @@ import com.bean.MainItemBean;
 import com.example.dveeale.sharkmvpdemo.R;
 import com.refreshview.XRefreshView;
 import com.refreshview.XRefreshViewFooter;
+import com.retrofit.news.NewsItem;
+import com.retrofit.news.NewsResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class NewsView implements NewsContarct.CView {
 
     private FloatingActionButton fabMainToTop;
 
+    private List<NewsItem> mNewsDatas;
 
 
     public NewsView(Context mContext){
@@ -59,23 +62,19 @@ public class NewsView implements NewsContarct.CView {
         refreshMain.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mNewsPresonter.LoadNetData("");
-                    }
-                }, 1000);
+
+                refreshMain.stopRefresh();
+                mNewsPresonter.LoadNetData("");
             }
 
             @Override
             public void onLoadMore(boolean isSilence) {
+                if(mNewsDatas!=null&&mNewsDatas.size()>0){
+                    String key=mNewsDatas.get(mNewsDatas.size()-1).getRowkey();
+                    mNewsPresonter.LoadNetMoreData(key);
+                }
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mNewsPresonter.LoadNetMoreData("");
-                    }
-                }, 1000);
+
             }
         });
     }
@@ -93,27 +92,25 @@ public class NewsView implements NewsContarct.CView {
     }
 
     @Override
-    public void UpdatePage(List<MainItemBean> mainItemBeanList) {
+    public void UpdatePage(NewsResult mNewsResult,boolean isMore) {
 
-        mNewsAdapter.SetDataList(mainItemBeanList);
+        if (isMore) {
+            refreshMain.stopLoadMore();
+            mNewsDatas.addAll(mNewsResult.getData());
+        }else{
+            mNewsDatas=mNewsResult.getData();
+        }
 
+        mNewsAdapter.SetDataList(mNewsDatas);
         mNewsAdapter.notifyDataSetChanged();
     }
+
 
     @Override
     public void ShowToast(String info) {
         Toast.makeText(mContext, info, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void StopListRefresh() {
-        refreshMain.stopRefresh();
-    }
-
-    @Override
-    public void StopListLoadMore() {
-        refreshMain.stopLoadMore();
-    }
 
     private void findViews(View mView){
         toolbar_one = (Toolbar) mView.findViewById(R.id.toolbar_one);
