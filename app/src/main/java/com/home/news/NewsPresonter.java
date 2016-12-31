@@ -37,7 +37,8 @@ public class NewsPresonter implements  NewsContarct.Presenter,NetWorkCallBackLis
 
     @Override
     public void LoadNetMoreData(String startKey) {
-        mNewsModelImpl.LoadMoreNetData("toutiao",startKey,"baisi");
+        //mNewsModelImpl.LoadMoreNetData("toutiao",startKey,"baisi");
+        mNewsModelImpl.LoadMoreNetDataRx("toutiao",startKey,"baisi");
     }
 
     @Override

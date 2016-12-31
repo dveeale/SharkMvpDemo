@@ -1,5 +1,6 @@
 package com.retrofit.news;
 
+import rx.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -18,4 +19,9 @@ public interface NewsService {
     Call<NewsResult> getNextResult(@Query("type") String type,
                                @Query("startkey") String endkey,
                                @Query("qid") String qid);
+
+    @GET("/jsonnew/next")
+    Observable<NewsResult> getNextResultRx(@Query("type") String type,
+        @Query("startkey") String endkey,
+        @Query("qid") String qid);
 }

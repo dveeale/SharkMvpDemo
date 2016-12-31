@@ -1,6 +1,7 @@
 package com.home.news;
 
 import android.content.Context;
+import android.database.Observable;
 import android.util.Log;
 
 import com.db.HawkDbKey;
@@ -13,6 +14,10 @@ import com.retrofit.news.NewsService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observer;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by dveeale on 16/12/28.
@@ -85,6 +90,25 @@ public class NewsModelImpl implements HawkDbKey{
                 mListener.onFailure(call.toString());
             }
         });
+    }
+
+    public void LoadMoreNetDataRx(String type,String startkey,String qid){
+        mNewsService.getNextResultRx(type,startkey,qid)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<NewsResult>() {
+                @Override public void onCompleted() {
+
+                }
+
+                @Override public void onError(Throwable e) {
+                    mListener.onFailure("数据加载失败");
+                }
+
+                @Override public void onNext(NewsResult result) {
+                    mListener.onSuccess(result,true);
+                }
+            });
     }
 
     public void LoadLocalData(){
